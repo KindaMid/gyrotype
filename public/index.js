@@ -1,3 +1,4 @@
+const io = require("socket.io-client");
 const socket = io();
 
 document.getElementById('pingBtn').addEventListener('click', () => {
