@@ -34,17 +34,25 @@ io.on("connect", (socket) => {
     });
 
     socket.on('PlsLetMeJoin', (data) => {
-        var UserCode = data.InputCode;
+        var UserCode = Number(data.InputCode);
+        var UserName = data.PlayerName;
 
         if(AllCodes.includes(UserCode)) {
-            console.log("User is joining ", data.InputCode);
-            socket.join(data.InputCode);
+            console.log("User is joining ", UserCode);
+            socket.join(UserCode);
             socket.emit("JoinConfirmed");
+            io.sockets.emit('UserJoiningBroadcast',{ name: UserName });
+            io.sockets.emit('WhatIsHostName');
         } else {
             console.log("code not found");
             console.log("All Codes are " + AllCodes);
             console.log("The Code you entered is " + UserCode);
         }
+    });
+
+    socket.on('HostNameSend', (data) => {
+        var HostNameIs = data.MyHostName;
+        io.sockets.emit('Broadcast_HostName',{ NameHost: HostNameIs });
     });
 
     // socket.emit is for only one client
